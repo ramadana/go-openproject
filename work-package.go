@@ -61,6 +61,7 @@ func (t Date) MarshalJSON() ([]byte, error) {
 // WorkPackage represents an OpenProject ticket or issue
 // Please note: Time and Date fields are pointers in order to avoid rendering them when not initialized
 type WorkPackage struct {
+	Embedded    *WPEmbedded           `json:"_embedded,omitempty" structs:"_embedded,omitempty"`
 	Subject     string                `json:"subject,omitempty" structs:"subject,omitempty"`
 	Description *WPDescription        `json:"description,omitempty" structs:"description,omitempty"`
 	Type        string                `json:"_type,omitempty" structs:"_type,omitempty"`
@@ -72,19 +73,34 @@ type WorkPackage struct {
 	LockVersion int                   `json:"lockVersion,omitempty" structs:"lockVersion,omitempty"`
 	Position    int                   `json:"position,omitempty" structs:"position,omitempty"`
 	Custom      tcontainer.MarshalMap `json:"custom,omitempty" structs:"custom,omitempty"`
-
-	Links *WPLinks `json:"_links,omitempty" _links:"id,omitempty"`
+	Links       *WPLinks              `json:"_links,omitempty" _links:"id,omitempty"`
 }
 
 // WPDescription type contains description and format
 type WPDescription OPGenericDescription
 
+// WPEmbedded type contains many objects that related to this work package.
+// As opposite to objects contained in Links object, objects in WPEmbedded also contain their value.
+// TODO: For now it is only attachments. For details on the other objects please refer to API response of a WP request.
+type WPEmbedded struct {
+	Attachments struct {
+		Embedded struct {
+			Elements []Attachment `json:"elements,omitempty" structs:"elements,omitempty"`
+		} `json:"_embedded,omitempty" structs:"_embedded,omitempty"`
+	} `json:"attachments,omitempty" structs:"attachments,omitempty"`
+}
+
 // WPLinks are WorkPackage Links
 type WPLinks struct {
-	Self     WPLinksField `json:"self,omitempty" structs:"self,omitempty"`
-	Type     WPLinksField `json:"type,omitempty" structs:"type,omitempty"`
-	Priority WPLinksField `json:"priority,omitempty" structs:"priority,omitempty"`
-	Status   WPLinksField `json:"status,omitempty" structs:"status,omitempty"`
+	Self        WPLinksField `json:"self,omitempty" structs:"self,omitempty"`
+	Assignee    WPLinksField `json:"assignee,omitempty" structs:"assignee,omitempty"`
+	Author      WPLinksField `json:"author,omitempty" structs:"author,omitempty"`
+	Parent      WPLinksField `json:"parent,omitempty" structs:"parent,omitempty"`
+	Priority    WPLinksField `json:"priority,omitempty" structs:"priority,omitempty"`
+	Project     WPLinksField `json:"project,omitempty" structs:"project,omitempty"`
+	Responsible WPLinksField `json:"responsible,omitempty" structs:"responsible,omitempty"`
+	Status      WPLinksField `json:"status,omitempty" structs:"status,omitempty"`
+	Type        WPLinksField `json:"type,omitempty" structs:"type,omitempty"`
 }
 
 // WPLinksField link and title
