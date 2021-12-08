@@ -21,12 +21,19 @@ type Attachment struct {
 	Description OPGenericDescription `json:"description,omitempty" structs:"description,omitempty"`
 	ContentType string               `json:"contentType,omitempty" structs:"contentType,omitempty"`
 	Digest      AttachmentDigest     `json:"digest,omitempty" structs:"digest,omitempty"`
+	Links       *AttachmentLinks     `json:"_links,omitempty" structs:"_links,omitempty"`
 }
 
 // AttachmentDigest wraps algorithm and hash
 type AttachmentDigest struct {
 	Algorithm string `json:"algorithm,omitempty" structs:"algorithm,omitempty"`
 	Hash      string `json:"hash,omitempty" structs:"hash,omitempty"`
+}
+
+// AttachmentLinks contains several links to object that related to this attachment.
+// TODO: For now it is only download location. For details on the other object, please refer to Attachment API response.
+type AttachmentLinks struct {
+	DownloadLocation OPGenericLink `json:"downloadLocation,omitempty" structs:"downloadLocation,omitempty"`
 }
 
 // GetWithContext gets a wiki page from OpenProject using its ID
