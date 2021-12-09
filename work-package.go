@@ -172,6 +172,9 @@ type SearchEmbeddedWP struct {
 func (s *WorkPackageService) GetWithContext(ctx context.Context, workpackageID string) (*WorkPackage, *Response, error) {
 	apiEndpoint := fmt.Sprintf("api/v3/work_packages/%s", workpackageID)
 	Obj, Resp, err := GetWithContext(ctx, s, apiEndpoint)
+	if Obj == nil {
+		return &WorkPackage{}, Resp, err
+	}
 	return Obj.(*WorkPackage), Resp, err
 }
 
