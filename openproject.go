@@ -415,7 +415,7 @@ func getObjectListAndClient(inputObj interface{}) (client *Client, resultObjList
 	switch inputObj.(type) {
 	case *AttachmentService:
 		client = inputObj.(*AttachmentService).client
-		// TODO implement
+		resultObjList = new(AttachmentList)
 	case *CategoryService:
 		client = inputObj.(*CategoryService).client
 		resultObjList = new(CategoryList)

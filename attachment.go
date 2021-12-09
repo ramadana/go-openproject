@@ -24,6 +24,18 @@ type Attachment struct {
 	Links       *AttachmentLinks     `json:"_links,omitempty" structs:"_links,omitempty"`
 }
 
+// AttachmentList is only a small wrapper containing AttachmentElements
+type AttachmentList struct {
+	Embedded AttachmentElements `json:"_embedded" structs:"_embedded"`
+	Total    int                `json:"total" structs:"total"`
+	Count    int                `json:"count" structs:"count"`
+}
+
+// AttachmentElements represent elements within AttachmentList list
+type AttachmentElements struct {
+	Elements []Attachment `json:"elements" structs:"elements"`
+}
+
 // AttachmentDigest wraps algorithm and hash
 type AttachmentDigest struct {
 	Algorithm string `json:"algorithm,omitempty" structs:"algorithm,omitempty"`
@@ -41,6 +53,16 @@ func (s *AttachmentService) GetWithContext(ctx context.Context, attachmentID str
 	apiEndPoint := fmt.Sprintf("api/v3/attachments/%s", attachmentID)
 	Obj, Resp, err := GetWithContext(ctx, s, apiEndPoint)
 	return Obj.(*Attachment), Resp, err
+}
+
+// GetList wraps GetWithContext using the background context.
+func (s *AttachmentService) GetList(workpackageID string) (*AttachmentList, *Response, error) {
+	apiEndPoint := fmt.Sprintf("api/v3/work_packages/%s/attachments", workpackageID)
+	objList, resp, err := GetListWithContext(context.Background(), s, apiEndPoint, &FilterOptions{})
+	if err != nil {
+		return &AttachmentList{}, resp, err
+	}
+	return objList.(*AttachmentList), resp, err
 }
 
 // Get wraps GetWithContext using the background context.
